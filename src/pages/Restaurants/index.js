@@ -6,20 +6,27 @@ import { Container, Header, HeaderContent, RestaurantList } from './styles';
 import restaurantImg from '../../assets/restaurant.png';
 
 function Restaurants() {
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const [restaurants, setRestaurants] = useState([]);
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const response = await fetch(
-          'https://redi-final-restaurants.herokuapp.com/restaurants',
-        );
-        const data = await response.json();
-        console.log(data.results);
-        setRestaurants(data.results);
-      } catch (error) {}
+  async function fetchData() {
+    try {
+      const response = await fetch(
+        'https://redi-final-restaurants.herokuapp.com/restaurants',
+      );
+      const data = await response.json();
+      console.log(data.results);
+      setIsLoaded(true);
+      setRestaurants(data.results);
+    } catch (error) {
+      setIsLoaded(true);
+      setError(error);
     }
+  }
 
+  useEffect(() => {
     fetchData();
   }, [setRestaurants]);
 
@@ -27,12 +34,11 @@ function Restaurants() {
     <Container>
       <Header>
         <img src={restaurantImg} alt="restaurant" />
-        <HeaderContent>
-          <h1>
-            <p>Support Local Restaurants</p>
-            <p>Eat Great Food</p>
-          </h1>
-        </HeaderContent>
+        <h1>
+          <p>Support Local Restaurants</p>
+          <p>Eat Great Food</p>
+        </h1>
+        <HeaderContent></HeaderContent>
       </Header>
 
       <RestaurantList>
